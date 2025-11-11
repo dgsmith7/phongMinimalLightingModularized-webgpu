@@ -1,0 +1,37 @@
+body {
+  background-color: #808080;
+  color: white;
+}
+
+input {
+  margin: 2px;
+  padding: 3px;
+}
+
+#bg-color {
+  border: black;
+}
+
+#main {
+  display: inline-block;
+}
+
+#gl-box {
+  width: 500px;
+  height: 500px;
+  margin: auto;
+}
+
+#controls {
+  min-height: 40%;
+  width: 90%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  column-gap: 5px;
+  margin: 15px;
+  padding: 5px;
+}
+
+div {
+  margin: 15px;
+}

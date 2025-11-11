@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="./favicon.ico">
+  <link rel="stylesheet" href="./style.css" />
+  <title>WebGL Shader Viewer</title>
+</head>
+
+<body>
+  <div id="gl-box">
+    <canvas id="gl-canvas" width="800" height="450"></canvas>
+  </div>
+
+  <div id="controls">
+    <div>
+      Camera Position
+      <div><input type="range" id="cam-x-axis" name="cam-x-axis" min="-25.0" max="25.0" step="1" />
+        <label for="cam-x-axis">Camera x: <span id="camX">0</span></label>
+      </div>
+      <div><input type="range" id="cam-y-axis" name="cam-y-axis" min="-25.0" max="25.0" step="1" />
+        <label for="cam-y-axis">Camera y: <span id="camY">0</span></label>
+      </div>
+      <div><input type="range" id="cam-z-axis" name="cam-z-axis" min="-25.0" max="25.0" step="1" />
+        <label for="cam-z-axis">Camera z: <span id="camZ">0</span></label>
+      </div>
+      Camera always pointing at origin
+    </div>
+    <div>
+      Light Position
+      <div><input type="range" id="light-x-axis" name="light-x-axis" min="-25.0" max="25" step="0.1" />
+        <label for="light-x-axis">Light Source x: <span id="lightX">0</span></label>
+      </div>
+      <div><input type="range" id="light-y-axis" name="light-y-axis" min="-25.0" max="25.0" step="0.1" />
+        <label for="light-y-axis">Light Source y: <span id="lightY">0</span></label>
+      </div>
+      <div><input type="range" id="light-z-axis" name="light-z-axis" min="-25.0" max="25.0" step="0.1" />
+        <label for="light-z-axis">Light Source z: <span id="lightZ">0</span></label>
+      </div>
+    </div><br>
+
+  </div>
+  <script src="./webglUtils.js"></script>
+  <script src="./bufferUtils.js"></script>
+  <script src="./geometryUtils.js"></script>
+  <script src="./shaderUtils.js"></script>
+  <script src="./shaders.js"></script>
+  <script src="./MVnew.js"></script>
+  <script src="./eventHandlers.js"></script>
+  <script src="./gpuUtils.js"></script>
+  <script src="./main.js" defer></script>
+</body>
+
+</html>
