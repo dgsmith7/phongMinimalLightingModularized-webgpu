@@ -24,6 +24,8 @@ async function initializeWebGPU(canvasId) {
     console.error("WebGPU not available (navigator.gpu is undefined)");
     return null;
   }
+  console.log(navigator.adapter);
+
   const adapter = await navigator.gpu.requestAdapter();
   if (!adapter) {
     alert("Failed to get GPU adapter");

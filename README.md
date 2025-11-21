@@ -77,8 +77,3 @@ Advanced notes for students
 License & credits
 
 This learning demo is provided as-is for educational purposes. Use and adapt freely.
-
----
-
-If you'd like, I can also add a short `MIGRATION_NOTES.md` that shows side-by-side GLSL/WGSL snippets for the vertex and fragment shaders. Would you like that next?
-# phongMinimalLightingModularized-webgpu
