@@ -44,7 +44,6 @@ function generateMesh() {
       meshVertices.push(...p2);
     }
   }
-
   return meshVertices;
 }
 

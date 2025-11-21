@@ -209,8 +209,4 @@ If you use an older browser build, enable WebGPU flags or use Chrome Canary. Pre
 - Create a small side-by-side page that renders the original GLSL shader (WebGL) next to the WGSL shader (WebGPU) to let students step through differences interactively.
 - Add a small unit test that validates the uniform buffer layout (compare typed-array byte offsets against expected offsets).
 
----
-
-If you'd like, I can also add a short `MIGRATION_EXAMPLES.md` that contains a few more line-by-line translations (e.g., GLSL `normalize()` vs WGSL `normalize()`, common function name changes, and how to port `texture()` calls). For tonight I've kept the notes focused and practical so students can reproduce the demo reliably.
-
 -- End of MIGRATION_NOTES

@@ -1,37 +1,50 @@
-body {
-  background-color: #808080;
-  color: white;
-}
-
-input {
-  margin: 2px;
-  padding: 3px;
-}
-
-#bg-color {
-  border: black;
-}
-
+/* Page wrapper — make the app fill the viewport and act as positioning context */
 #main {
-  display: inline-block;
+  position: relative; /* containing block for absolute children */
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
 }
 
-#gl-box {
-  width: 500px;
-  height: 500px;
-  margin: auto;
+/* Canvas: cover the whole wrapper as background */
+#gl-box,
+#gl-canvas {
+  position: absolute;
+  inset: 0; /* top:0; right:0; bottom:0; left:0 */
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 0; /* behind controls */
+  object-fit: cover; /* keep aspect cover-like behavior if needed */
 }
 
+/* Controls overlay on top of canvas */
 #controls {
-  min-height: 40%;
-  width: 90%;
-  display: grid;
-  grid-template-columns: 50% 50%;
-  column-gap: 5px;
-  margin: 15px;
-  padding: 5px;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: auto;
+  z-index: 2; /* above canvas */
+  background: rgba(
+    0,
+    0,
+    0,
+    0.45
+  ); /* translucent panel so canvas shows through */
+  color: white;
+  padding: 10px;
+  border-radius: 6px;
+  max-width: 420px;
+  pointer-events: auto; /* make controls interactive */
+  backdrop-filter: blur(4px); /* optional nice touch */
 }
 
-div {
-  margin: 15px;
+/* Optional: keep small UI elements readable on narrow screens */
+@media (max-width: 700px) {
+  #controls {
+    left: 8px;
+    right: 8px;
+    max-width: none;
+    font-size: 14px;
+  }
 }

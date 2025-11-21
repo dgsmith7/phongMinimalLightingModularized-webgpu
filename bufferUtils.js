@@ -56,25 +56,7 @@ function createGPUVertexBuffer(
   if (!device) throw new Error("createGPUVertexBuffer: device is required");
   const arrayBuffer = float32Array.buffer ? float32Array.buffer : float32Array;
   const buffer = device.createBuffer({
-    size: (arrayBuffer.byteLength + 3) & ~3,
-    usage: usage,
-    mappedAtCreation: true,
-  });
-  const mapping = new Uint8Array(buffer.getMappedRange());
-  mapping.set(new Uint8Array(arrayBuffer));
-  buffer.unmap();
-  return buffer;
-}
-
-function createGPUIndexBuffer(
-  device,
-  indexArray,
-  usage = GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST
-) {
-  if (!device) throw new Error("createGPUIndexBuffer: device is required");
-  const arrayBuffer = indexArray.buffer ? indexArray.buffer : indexArray;
-  const buffer = device.createBuffer({
-    size: (arrayBuffer.byteLength + 3) & ~3,
+    size: Math.ceil(arrayBuffer.byteLength / 4) * 4,
     usage: usage,
     mappedAtCreation: true,
   });
@@ -110,5 +92,4 @@ function interleaveVertexData(positionsArray, normalsArray) {
 
 // Expose GPU helpers globally (non-module style to match existing project)
 window.createGPUVertexBuffer = createGPUVertexBuffer;
-window.createGPUIndexBuffer = createGPUIndexBuffer;
 window.interleaveVertexData = interleaveVertexData;

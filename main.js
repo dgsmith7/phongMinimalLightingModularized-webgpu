@@ -14,6 +14,7 @@ let context = null;
 let near = 0.1;
 let far = 100.0;
 
+//let lightPosition = vec4(5.0, 10.0, 5.0, 1.0);
 let lightAmbient = vec4(0.3, 0.3, 0.3, 1.0);
 let lightDiffuse = vec4(1.0, 1.0, 1.0, 1.0);
 let lightSpecular = vec4(1.0, 1.0, 1.0, 1.0);
@@ -59,6 +60,20 @@ async function init() {
   queue = gpu.queue;
   context = gpu.context;
   format = gpu.format;
+
+  try {
+    const adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) {
+      console.log("No appropriate GPUAdapter found.");
+      return;
+    }
+    console.log("GPU Architecture:", adapter.info.architecture);
+    console.log("GPU Supported Features:", adapter.info.description);
+    console.log("GPU Supported Limits:", adapter.info.device);
+    console.log("GPU Vendor:", adapter.info.vendor);
+  } catch (error) {
+    console.error("Error requesting WebGPU adapter:", error);
+  }
 
   // Production note: WebGPU differs from WebGL in several ways.
   // - WebGL is a stateful API with global state (bound program, bound
@@ -209,7 +224,7 @@ async function init() {
   // wire up GUI and start
   addEventListeners(); // eventHandlers.js
 
-  requestAnimationFrame(frame);
+  requestAnimationFrame(render);
 }
 
 function packUniforms() {
@@ -311,14 +326,12 @@ function packUniforms() {
   data[offset++] = 0.0;
   data[offset++] = 0.0;
   data[offset++] = 0.0;
-
   return data;
 }
 
-function frame() {
+function render() {
   // update canvas size / depth texture if needed
   gpu.onResize();
-
   // update uniforms
   const uniformData = packUniforms();
   queue.writeBuffer(
@@ -328,7 +341,6 @@ function frame() {
     uniformData.byteOffset || 0,
     uniformData.byteLength
   );
-
   // begin render
   const { view, depthView } = gpu.getCurrentViews();
   const commandEncoder = device.createCommandEncoder();
@@ -336,7 +348,12 @@ function frame() {
     colorAttachments: [
       {
         view: view,
-        clearValue: { r: 0.1, g: 0.1, b: 0.1, a: 1.0 },
+        clearValue: {
+          r: 0.1,
+          g: 0.1,
+          b: 0.1,
+          a: 1.0,
+        },
         loadOp: "clear",
         storeOp: "store",
       },
@@ -348,16 +365,13 @@ function frame() {
       depthStoreOp: "store",
     },
   });
-
   renderPass.setPipeline(pipeline);
   renderPass.setBindGroup(0, bindGroup);
   renderPass.setVertexBuffer(0, vertexBufferGPU);
   renderPass.draw(vertexCount, 1, 0, 0);
   renderPass.end();
-
   device.queue.submit([commandEncoder.finish()]);
-
-  requestAnimationFrame(frame);
+  requestAnimationFrame(render);
 }
 
 // start

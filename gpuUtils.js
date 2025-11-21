@@ -17,7 +17,6 @@ async function initializeWebGPU(canvasId) {
     console.error("initializeWebGPU: canvas not found - id=", canvasId);
     return null;
   }
-
   if (!navigator.gpu) {
     alert(
       "WebGPU is not supported in this browser. Try Chrome/Chromium with WebGPU enabled or Safari TP."
@@ -25,21 +24,18 @@ async function initializeWebGPU(canvasId) {
     console.error("WebGPU not available (navigator.gpu is undefined)");
     return null;
   }
-
   const adapter = await navigator.gpu.requestAdapter();
   if (!adapter) {
     alert("Failed to get GPU adapter");
     console.error("Failed to request GPU adapter");
     return null;
   }
-
   const device = await adapter.requestDevice();
   if (!device) {
     alert("Failed to get GPU device");
     console.error("Failed to request GPU device");
     return null;
   }
-
   const context = canvas.getContext("webgpu");
   if (!context) {
     alert("Failed to get WebGPU canvas context");
@@ -48,7 +44,6 @@ async function initializeWebGPU(canvasId) {
   }
 
   const format = navigator.gpu.getPreferredCanvasFormat();
-
   // Resize helper: make the canvas backing store match CSS size * DPR
   function resizeCanvasToDisplaySize() {
     const dpr = window.devicePixelRatio || 1;
@@ -61,31 +56,25 @@ async function initializeWebGPU(canvasId) {
     }
     return false;
   }
-
   // configure context and create a depth texture sized to the canvas
   function configureContext() {
     // ensure canvas size is up to date
     resizeCanvasToDisplaySize();
-
     context.configure({
       device: device,
       format: format,
       alphaMode: "opaque",
     });
-
     // Create a depth texture for depth testing
     const depthTexture = device.createTexture({
       size: [canvas.width, canvas.height, 1],
       format: "depth24plus",
       usage: GPUTextureUsage.RENDER_ATTACHMENT,
     });
-
     return depthTexture;
   }
-
   // Initial configuration
   let depthTexture = configureContext();
-
   // Resize handler that reconfigures the context and re-creates the depth texture
   function onResize() {
     const changed = resizeCanvasToDisplaySize();
@@ -94,7 +83,6 @@ async function initializeWebGPU(canvasId) {
       depthTexture = configureContext();
     }
   }
-
   // Provide helper to get current swap chain view and depth view for render pass
   function getCurrentViews() {
     const currentTexture = context.getCurrentTexture();
@@ -102,7 +90,6 @@ async function initializeWebGPU(canvasId) {
     const depthView = depthTexture.createView();
     return { view, depthView };
   }
-
   // Provide a simple API surface similar to the WebGL helper used in the project
   return {
     device,
@@ -116,25 +103,6 @@ async function initializeWebGPU(canvasId) {
     adapter,
   };
 }
-
-// Convenience function to create a GPU buffer and initialize it with data.
-function createGPUBuffer(
-  device,
-  dataArray,
-  usage = GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
-) {
-  const arrayBuffer = dataArray.buffer ? dataArray.buffer : dataArray;
-  const buffer = device.createBuffer({
-    size: (arrayBuffer.byteLength + 3) & ~3, // pad to 4 bytes
-    usage: usage,
-    mappedAtCreation: true,
-  });
-  const mapping = new Uint8Array(buffer.getMappedRange());
-  mapping.set(new Uint8Array(arrayBuffer));
-  buffer.unmap();
-  return buffer;
-}
-
 // Helper to create an empty uniform buffer of a given byte size
 function createUniformBuffer(device, byteSize) {
   return device.createBuffer({
@@ -142,20 +110,6 @@ function createUniformBuffer(device, byteSize) {
     usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
   });
 }
-
-// Helper to write to a GPUBuffer
-function writeToBuffer(deviceQueue, buffer, data, offset = 0) {
-  deviceQueue.writeBuffer(
-    buffer,
-    offset,
-    data.buffer ? data.buffer : data,
-    data.byteOffset || 0,
-    data.byteLength || data.length
-  );
-}
-
 // Expose simple global helpers (non-module style to match project scripts)
 window.initializeWebGPU = initializeWebGPU;
-window.createGPUBuffer = createGPUBuffer;
 window.createUniformBuffer = createUniformBuffer;
-window.writeToBuffer = writeToBuffer;
