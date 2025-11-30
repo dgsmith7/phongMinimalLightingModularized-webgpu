@@ -296,11 +296,9 @@ function packUniforms() {
   const mProjCorr = mulMat4(C, mProj);
   const mMVP = mulMat4(mProjCorr, mView);
   for (let i = 0; i < 16; ++i) data[offset++] = mMVP[i];
-
   // pack modelView (eye-space transform) so the shader can compute lighting
   // in eye-space (modelView) while using mMVP for clip-space position.
   for (let i = 0; i < 16; ++i) data[offset++] = mView[i];
-
   // normalMatrix as mat4 (next 16 floats)
   new Float32Array(flatten(normalMat4)).forEach((v) => {
     data[offset++] = v;
